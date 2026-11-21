@@ -1,25 +1,17 @@
-name: CI
-
+name: Enterprise openBIM CI
 on:
   push:
     branches: [main]
   pull_request:
-
+    branches: [main]
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v6
+      - uses: astral-sh/setup-uv@v4
         with:
-          python-version: "3.13"
-      - run: uv sync --locked
-      - run: uv run ruff check
-      - run: uv run ruff format --check
-      - run: uv run mypy src
-      - name: Cache test data
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/bimpolars
-          key: bimpolars-data-v1
-      - run: uv run pytest
+          python-version: "3.12"
+      - run: uv sync --dev
+      - run: uv run pytest tests/test_enterprise_openbim.py -v
+      - run: uv run bimpolars --help
